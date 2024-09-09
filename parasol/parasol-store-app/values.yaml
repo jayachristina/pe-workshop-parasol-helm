@@ -4,7 +4,7 @@ fullnameOverride: ""
 replicaCount: 1
 
 image:
-  repository: quay.io/cloud-architecture-workshop/globex-store
+  repository: quay.io/redhat_pe_workshop/parasol-store
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
