@@ -1,5 +1,4 @@
 {{- range untilStep 0 (.Values.loop.count | int64 | int) 1 }}
-{{- $loop := printf "%s%s" $.Values.loop.prefix ((add . 1) | toString) }}
 {{- $parasolWebGatewayContainerId := printf "%s" (uuidv4 | toString) }}
 {{- $clientRealmManagementContainerId := printf "%s" (uuidv4 | toString) }}
 {{- $clientBrokerContainerId := printf "%s" (uuidv4 | toString) }}
@@ -8,16 +7,16 @@
 apiVersion: k8s.keycloak.org/v2alpha1
 kind: KeycloakRealmImport
 metadata:
-  name: {{ $.Values.realm.name }}-{{ $loop }}
+  name: {{ $.Values.realm.name }}
   labels:
     {{- include "keycloak-realmimport.labels" $ | nindent 4 }}
     app: keycloak
 spec:
   keycloakCRName: {{ $.Values.keycloak.name }}
   realm:
-    id: {{ $.Values.realm.name }}-{{ $loop }}
-    realm: {{ $.Values.realm.name }}-{{ $loop }}
-    displayName: {{ $.Values.realm.name }}-{{ $loop }}
+    id: {{ $.Values.realm.name }}
+    realm: {{ $.Values.realm.name }}
+    displayName: {{ $.Values.realm.name }}
     notBefore: 0
     defaultSignatureAlgorithm: RS256
     revokeRefreshToken: false
@@ -66,13 +65,13 @@ spec:
           name: admin
           composite: false
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
         - id: {{ uuidv4 }}
           name: confidential
           composite: false
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
         - id: {{ uuidv4 }}
           name: default-roles-{{ $.Values.realm.name }}
@@ -87,39 +86,39 @@ spec:
                 - view-profile
                 - manage-account
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
         - id: {{ uuidv4 }}
           name: offline_access
           description: "${role_offline-access}"
           composite: false
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
         - id: {{ uuidv4 }}
           name: uma_authorization
           description: "${role_uma_authorization}"
           composite: false
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
         - id: {{ uuidv4 }}
           name: mobile-user
           composite: false
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
         - id: {{ uuidv4 }}
           name: web-user
           composite: false
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
         - id: {{ uuidv4 }}
           name: user
           composite: false
           clientRole: false
-          containerId: {{ $.Values.realm.name }}-{{ $loop }}
+          containerId: {{ $.Values.realm.name }}
           attributes: {}
       client:
         {{ $.Values.client.gateway }}:
@@ -369,7 +368,7 @@ spec:
       description: "${role_default-roles}"
       composite: false
       clientRole: false
-      containerId: {{ $.Values.realm.name }}-{{ $loop }}
+      containerId: {{ $.Values.realm.name }}
     requiredCredentials:
       - password
     otpPolicyType: totp
@@ -423,8 +422,8 @@ spec:
             - manage-account
         notBefore: 0
         groups: []
-      - username: {{ $loop }}
-        email: {{ $loop }}@email.com
+      - username: {{ $.Values.realm.name }}
+        email: {{ $.Values.realm.name }}@email.com
         enabled: true
         totp: false
         emailVerified: false
@@ -438,7 +437,7 @@ spec:
         disableableCredentialTypes: []
         requiredActions: []
         realmRoles:
-          - default-roles-parasol-{{ $loop }}
+          - default-roles-parasol
         clientRoles:
           realm-management:
             - realm-admin
@@ -552,14 +551,14 @@ spec:
         clientId: account
         name: "${client_account}"
         rootUrl: "${authBaseUrl}"
-        baseUrl: "/realms/{{ $.Values.realm.name }}-{{ $loop }}/account/"
+        baseUrl: "/realms/{{ $.Values.realm.name }}/account/"
         surrogateAuthRequired: false
         enabled: true
         alwaysDisplayInConsole: false
         clientAuthenticatorType: client-secret
         secret: "{{ randAlphaNum 32 }}"
         redirectUris:
-          - "/realms/{{ $.Values.realm.name }}-{{ $loop }}/account/*"
+          - "/realms/{{ $.Values.realm.name }}/account/*"
         webOrigins: []
         notBefore: 0
         bearerOnly: false
@@ -590,13 +589,13 @@ spec:
         clientId: account-console
         name: "${client_account-console}"
         rootUrl: "${authBaseUrl}"
-        baseUrl: "/realms/{{ $.Values.realm.name }}-{{ $loop }}/account/"
+        baseUrl: "/realms/{{ $.Values.realm.name }}/account/"
         surrogateAuthRequired: false
         enabled: true
         alwaysDisplayInConsole: false
         clientAuthenticatorType: client-secret
         redirectUris:
-          - "/realms/{{ $.Values.realm.name }}-{{ $loop }}/account/*"
+          - "/realms/{{ $.Values.realm.name }}/account/*"
         webOrigins: []
         notBefore: 0
         bearerOnly: false
@@ -841,14 +840,14 @@ spec:
         clientId: security-admin-console
         name: "${client_security-admin-console}"
         rootUrl: "${authAdminUrl}"
-        baseUrl: "/admin/{{ $.Values.realm.name }}-{{ $loop }}/console/"
+        baseUrl: "/admin/{{ $.Values.realm.name }}/console/"
         surrogateAuthRequired: false
         enabled: true
         alwaysDisplayInConsole: false
         clientAuthenticatorType: client-secret
         secret: "{{ randAlphaNum 32 }}"
         redirectUris:
-          - "/admin/{{ $.Values.realm.name }}-{{ $loop }}/console/*"
+          - "/admin/{{ $.Values.realm.name }}/console/*"
         webOrigins:
           - "+"
         notBefore: 0
